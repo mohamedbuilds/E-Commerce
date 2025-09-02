@@ -9,8 +9,10 @@ import {
   NavbarToggle,
 } from "flowbite-react";
 import { UserContext } from "../../Context/UserContext";
+import { CartContext } from "../../Context/CartContext";
 
 export default function MyNavbar() {
+  let { cartCount } = useContext(CartContext);
   let navgiate = useNavigate();
   let { userLogin, setuserLogin } = useContext(UserContext);
 
@@ -48,7 +50,7 @@ export default function MyNavbar() {
               Brands
             </NavbarLink>
             <NavbarLink as={NavLink} to="/cart">
-              Cart
+              Cart {cartCount}
             </NavbarLink>
           </>
         ) : null}

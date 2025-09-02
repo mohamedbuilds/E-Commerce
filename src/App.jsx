@@ -13,6 +13,8 @@ import UserContextProvider from "./Context/UserContext";
 import ProductedRoute from "./Components/ProductedRoute/ProductedRoute";
 import ProductDetials from "./Components/ProductDetials/ProductDetials";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import CartContextProvider from "./Context/CartContext";
+import { Toaster } from 'react-hot-toast';
 
 let query = new QueryClient();
 
@@ -82,6 +84,14 @@ let x = createBrowserRouter([
           </ProductedRoute>
         ),
       },
+      {
+         path: "*",
+         element: (
+           <ProductedRoute>
+            <Notfound/>
+          </ProductedRoute>
+         )
+      }
     ],
   },
 ]);
@@ -91,7 +101,10 @@ export default function App() {
     <>
       <UserContextProvider>
         <QueryClientProvider client={query}>
-          <RouterProvider router={x}></RouterProvider>
+          <CartContextProvider>
+            <RouterProvider router={x}></RouterProvider>
+            <Toaster/>
+          </CartContextProvider>
         </QueryClientProvider>
       </UserContextProvider>
     </>

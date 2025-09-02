@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "./CatgoriesSlider.module.css";
 import Slider from "react-slick";
 import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 export default function CatgoriesSlider() {
-  const [catgories, setcatgories] = useState([]);
-
   var settings = {
     dots: false,
     infinite: true,
@@ -52,60 +51,76 @@ export default function CatgoriesSlider() {
       },
     ],
   };
+
   async function getCatgories() {
-    try {
-      let { data } = await axios.get(
-        `https://ecommerce.routemisr.com/api/v1/categories`
-      );
-      setcatgories(data.data);
-    } catch (error) {
-      console.log(error);
-    }
+    return axios
+      .get(`https://ecommerce.routemisr.com/api/v1/categories`)
+      .then((res) => res.data.data);
   }
-  useEffect(() => {
-    getCatgories();
-  }, []);
+  const {
+    data: Catgories,
+    isLoading: CatgoriesLoading,
+    isError: CatgoriesIsError,
+    error: CatgoriesError,
+  } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCatgories,
+  });
+
+  if (CatgoriesLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="sk-folding-cube">
+          <div className="sk-cube1 sk-cube"></div>
+          <div className="sk-cube2 sk-cube"></div>
+          <div className="sk-cube4 sk-cube"></div>
+          <div className="sk-cube3 sk-cube"></div>
+        </div>
+      </div>
+    );
+  }
+  if (CatgoriesIsError) {
+    return (
+      <p className="text-red-600 text-center mt-10">
+        Error loading categories: {CatgoriesError.message}
+      </p>
+    );
+  }
   return (
     <>
       <div className="container mx-auto px-4 mt-16">
-        {catgories.length > 0 ? (
-          <>
-            {/* العنوان */}
-            <h1 className="text-2xl md:text-3xl font-bold mb-8 text-gray-800">
-              Shop Popular Categories
-            </h1>
+        {/* العنوان */}
+        <h1 className="text-2xl md:text-3xl font-bold mb-8 text-gray-800 text-center">
+          Shop Popular Categories
+        </h1>
 
-            {/* السلايدر */}
-            <Slider {...settings}>
-              {catgories.map((el) => (
-                <div
-                  key={el._id}
-                  className="p-2 flex flex-col items-center cursor-pointer"
-                >
-                  <div className="w-32 h-32 md:w-40 md:h-40 rounded-xl overflow-hidden shadow-md transition-transform duration-300 hover:scale-105">
-                    <img
-                      src={el.image}
-                      alt={el.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <p className="mt-3 text-center text-gray-700 font-semibold">
-                    {el.name}
-                  </p>
-                </div>
-              ))}
-            </Slider>
-          </>
-        ) : (
-          <div className="flex justify-center items-center h-64">
-            <div className="sk-folding-cube">
-              <div className="sk-cube1 sk-cube"></div>
-              <div className="sk-cube2 sk-cube"></div>
-              <div className="sk-cube4 sk-cube"></div>
-              <div className="sk-cube3 sk-cube"></div>
+        {/* السلايدر */}
+        <Slider {...settings}>
+          {Catgories.map((el) => (
+            <div
+              key={el._id}
+              className="p-4 flex flex-col items-center cursor-pointer"
+            >
+              <div
+                className="w-32 h-32 md:w-40 md:h-40 rounded-2xl overflow-hidden 
+              shadow-lg transition-transform duration-300 hover:scale-110 hover:shadow-xl 
+              border border-gray-200 bg-gradient-to-br from-white to-gray-100"
+              >
+                <img
+                  src={el.image}
+                  alt={el.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <p
+                className="mt-4 text-center text-gray-800 font-semibold text-sm md:text-base 
+              transition-colors duration-300 hover:text-green-600"
+              >
+                {el.name}
+              </p>
             </div>
-          </div>
-        )}
+          ))}
+        </Slider>
       </div>
     </>
   );
