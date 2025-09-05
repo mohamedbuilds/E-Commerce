@@ -15,7 +15,7 @@ import ProductDetials from "./Components/ProductDetials/ProductDetials";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import CartContextProvider from "./Context/CartContext";
 import { Toaster } from "react-hot-toast";
-import Forgotpassword from "./Components/forgotpassword/forgotpassword";
+import Forgotpassword from "./Components/Forgotpassword/Forgotpassword";
 import RestPassword from "./Components/RestPassword/RestPassword";
 import CatgoriesDetials from "./Components/CatgoriesDetials/CatgoriesDetials";
 import BrandDetials from "./Components/BrandDetials/BrandDetials";
