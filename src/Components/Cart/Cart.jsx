@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import "./Cart.module.css";
 import {
   Table,
   TableBody,

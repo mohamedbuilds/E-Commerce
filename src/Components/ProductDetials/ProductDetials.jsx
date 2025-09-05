@@ -1,13 +1,16 @@
-import React from "react";
-import "./ProductDetials.module.css";
+import React, { useContext, useState } from "react";
+
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import Slider from "react-slick";
 import { useQuery } from "@tanstack/react-query";
+import { CartContext } from "../../Context/CartContext";
+import toast from "react-hot-toast";
 
 export default function ProductDetials() {
+  const [load, setload] = useState(false);
   let { id } = useParams();
-
+  let { addProductToCart } = useContext(CartContext);
   var settings = {
     dots: false,
     infinite: true,
@@ -68,12 +71,27 @@ export default function ProductDetials() {
       .then((res) => res.data.data);
   }
 
-  const {
-    data: allProducts,
-    isLoading: isProductsLoading,
-    isError: isProductsError,
-    error: productsError,
-  } = useQuery({
+  async function addProduct(id) {
+    try {
+      setload(true);
+      let response = await addProductToCart(id);
+      console.log(response.data);
+      if (response.data.status == "success") {
+        toast.success(response.data.message);
+      } else {
+        setload(false);
+        toast.error(response.data.message);
+      }
+    } catch (err) {
+      console.log(err);
+
+      setload(false);
+    } finally {
+      setload(false);
+    }
+  }
+
+  const { data: allProducts, isLoading: isProductsLoading } = useQuery({
     queryKey: ["allProducts"],
     queryFn: getProducts,
   });
@@ -148,16 +166,15 @@ export default function ProductDetials() {
                 ({productDetails?.ratingsQuantity} reviews)
               </span>
             </div>
-
             <div className="mb-6">
               <p className="text-sm text-gray-500">
-                Brand:{" "}
+                Brand:
                 <span className="font-medium">
                   {productDetails?.brand?.name}
                 </span>
               </p>
               <p className="text-sm text-gray-500">
-                Category:{" "}
+                Category:
                 <span className="font-medium">
                   {productDetails?.category?.name}
                 </span>
@@ -172,26 +189,33 @@ export default function ProductDetials() {
             text-white font-bold py-3 px-5 rounded-xl 
             shadow-md transition-all duration-300 
             hover:bg-green-700 hover:from-green-700 hover:to-green-700 
-            hover:shadow-xl hover:-translate-y-1 hover:scale-105"
+            hover:shadow-xl hover:-translate-y-1 hover:scale-105 cursor-pointer"
+            onClick={() => addProduct(productDetails.id)}
           >
-            🛒 Add to Cart
+            {load ? (
+              <>
+                <i className="fas fa-spinner fa-spin"></i>
+              </>
+            ) : (
+              "Add To Cart"
+            )}
           </button>
         </div>
       </div>
 
       {productDetails && (
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {allProducts
             .filter((el) => el.category.name === productDetails?.category?.name)
             .map((el) => (
               <div
                 key={el._id}
-                className="w-1/4 bg-white shadow-md rounded-lg p-4 flex flex-col"
+                className="bg-white shadow-md rounded-lg p-4 flex flex-col"
               >
                 <img
                   src={el.imageCover}
                   alt={el.title}
-                  className="rounded-lg mb-4 w-full  object-cover"
+                  className="rounded-lg mb-4 w-full object-cover"
                 />
                 <h3 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-2">
                   {el.title}

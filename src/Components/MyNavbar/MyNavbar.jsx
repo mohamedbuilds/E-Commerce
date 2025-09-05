@@ -49,6 +49,9 @@ export default function MyNavbar() {
             <NavbarLink as={NavLink} to="/brands">
               Brands
             </NavbarLink>
+            <NavbarLink as={NavLink} to="/wishList">
+              WishList
+            </NavbarLink>
             <NavbarLink as={NavLink} to="/cart">
               Cart {cartCount}
             </NavbarLink>

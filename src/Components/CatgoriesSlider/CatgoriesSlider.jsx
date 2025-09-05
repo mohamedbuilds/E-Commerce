@@ -1,56 +1,55 @@
 import React from "react";
-import "./CatgoriesSlider.module.css";
 import Slider from "react-slick";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 export default function CatgoriesSlider() {
-  var settings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 7,
-    slidesToScroll: 3,
-    autoplay: true,
-    autoplaySpeed: 2000,
-    pauseOnHover: true,
-    responsive: [
-      {
-        breakpoint: 1280, // شاشات لابتوب
-        settings: {
-          slidesToShow: 5,
-          slidesToScroll: 2,
-        },
+var settings = {
+  dots: false,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 7,
+  slidesToScroll: 3,
+  autoplay: true,
+  autoplaySpeed: 2000,
+  pauseOnHover: true,
+  responsive: [
+    {
+      breakpoint: 1280, // لابتوب
+      settings: {
+        slidesToShow: 5,
+        slidesToScroll: 2,
       },
-      {
-        breakpoint: 1024, // تابلت كبير
-        settings: {
-          slidesToShow: 4,
-          slidesToScroll: 2,
-        },
+    },
+    {
+      breakpoint: 1024, // تابلت كبير
+      settings: {
+        slidesToShow: 4,
+        slidesToScroll: 2,
       },
-      {
-        breakpoint: 768, // تابلت
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-        },
+    },
+    {
+      breakpoint: 768, // تابلت
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 1,
       },
-      {
-        breakpoint: 480, // موبايل
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-        },
+    },
+    {
+      breakpoint: 480, // موبايل صغير
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 1,
       },
-      {
-        breakpoint: 280, // موبايل
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
+    },
+    {
+      breakpoint: 320, // أصغر الهواتف
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1,
       },
-    ],
-  };
+    },
+  ],
+};
 
   async function getCatgories() {
     return axios
